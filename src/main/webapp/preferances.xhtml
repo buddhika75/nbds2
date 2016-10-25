@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./resources/template/template_1.xhtml">
+
+            <ui:define name="content">
+
+                <h:form>
+                    <p:panel>
+                        <f:facet name="header" >
+                            <h:outputLabel value="Theme Gallary" ></h:outputLabel>
+                        </f:facet>
+                        <p:panelGrid columns="2">
+                            <p:themeSwitcher style="width:165px" id="defaultSwitcher" value="#{themeSwitcherBean.theme}">
+                                <f:selectItem itemLabel="Choose Theme" itemValue="" />
+                                <f:selectItems value="#{themeSwitcherBean.themes}" />
+                            </p:themeSwitcher>
+                            <p:commandButton ajax="false" value="Set" action="#{themeSwitcherBean.saveTheme}"></p:commandButton>
+                        </p:panelGrid>
+                    </p:panel>
+                </h:form>
+
+
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

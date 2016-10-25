@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./resources/template/template_1.xhtml">
+
+            <ui:define name="content">
+                <h:form>
+                    <p:panel rendered="#{sessionController.insAdmin or sessionController.sysAdmin or sessionController.superUser}" style="border: #ffffff">
+                        <f:facet name="header" >
+                            <h:outputLabel value="District Case Ascertainments Forms" ></h:outputLabel>
+                            <p:spacer width="10"></p:spacer>
+                            <p:spacer width="10"></p:spacer>
+                            <!--                            <p:outputLabel value="Hospital"></p:outputLabel>-->
+                           <p:autoComplete id="acHos"
+                                            forceSelection="true"                                 
+                                            value="#{abstractionFormController.area}" 
+                                            completeMethod="#{areaController.completeDistricts}"
+                                            var="oi" itemLabel="#{oi.name}" itemValue="#{oi}" >
+                            </p:autoComplete>
+                            <p:commandButton ajax="false" value="List All" action="#{abstractionFormController.listDistrict()}"></p:commandButton>
+                            <h:commandLink style="float: right">
+                                <p:graphicImage library="image/icon" name="excel.png" style="height: 30px; width: 30px;"/>
+                                <p:dataExporter type="xls" target="tbl1" fileName="notification_list" />
+                            </h:commandLink>
+
+                            <h:commandLink style="float: right">
+                                <p:graphicImage library="image/icon" name="pdf.png" style="height: 30px; width: 30px;"/>
+                                <p:dataExporter type="pdf" target="tbl1" fileName="notification_list"/>
+                            </h:commandLink>
+
+                            <h:commandLink style="float: right">
+                                <p:graphicImage library="image/icon" name="csv.png" style="height: 30px; width: 30px;"/>
+                                <p:dataExporter type="csv" target="tbl1" fileName="notification_list" />
+                            </h:commandLink>
+
+                            <h:commandLink style="float: right">
+                                <p:graphicImage library="image/icon" name="xml.png" style="height: 30px; width: 30px;"/>
+                                <p:dataExporter type="xml" target="tbl1" fileName="notification_list" />
+                            </h:commandLink>
+                            <h:commandLink style="float: right">
+                                <p:graphicImage library="image/icon" name="print.png" style="height: 30px; width: 30px;"/>
+                                <p:printer target="tbl1" />
+                            </h:commandLink>
+                        </f:facet>
+
+                        <p:dataTable value="#{abstractionFormController.items}" var="aaf" rowIndexVar="iv" id="tbl1"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15"
+                                     rows="10"
+                                     >
+                            <p:column headerText="No" width="25">
+                                <h:outputLabel value="#{iv + 1}"></h:outputLabel>
+                            </p:column>
+                            <p:column headerText="Infants Name" sortBy="#{aaf.infant.name}" filterBy="#{aaf.infant.name}" filterMatchMode="contains">
+                                <h:outputLabel value="#{aaf.infant.name}"></h:outputLabel>
+                            </p:column>
+                            <p:column headerText="Infants Sex" sortBy="#{aaf.infant.personSex }">
+                                <h:outputLabel value="#{aaf.infant.personSex }"></h:outputLabel>
+                            </p:column>
+                            <p:column headerText="Diagnosis" sortBy="#{aaf.diagnosis}">
+                                <h:outputLabel value="#{aaf.diagnosis}"></h:outputLabel>
+                            </p:column>
+                            <p:column headerText="Institution" sortBy="#{aaf.hospital.name}" filterBy="#{aaf.hospital.name}" filterMatchMode="contains">
+                                <h:outputLabel value="#{aaf.hospital.name}"></h:outputLabel>
+                            </p:column>
+                            <p:column headerText="Ward" sortBy="#{aaf.ward.name}">
+                                <h:outputLabel value="#{aaf.ward.name}"></h:outputLabel>
+                            </p:column>
+                            <p:column exportable="false" headerText="View Abstraction Form">
+                                <p:commandButton value="View" action="birth_diffect_abstraction_form" ajax="false">
+                                    <f:setPropertyActionListener value="#{aaf}" target="#{abstractionFormController.current}" ></f:setPropertyActionListener>
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

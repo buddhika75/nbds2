@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./resources/template/template_1.xhtml">
+
+            <ui:define name="content">
+                <h:form  >
+                    <p:growl autoUpdate="true" />
+
+                    <p:panel style="border: #ffffff">
+                        <f:facet name="header" >
+                            <h:outputLabel value="Manage Departments" ></h:outputLabel>
+                        </f:facet>
+                        <div align="center">
+                            <h:panelGrid id ="gpVeda" columns="2" >
+
+                                <h:panelGrid id="depSelect" columns="1"  >
+                                    <p:panel>
+
+                                        <h:panelGrid id="depSelectText" columns="2" >
+
+                                            <h:outputText id="lblCatName" value="Institution" ></h:outputText>
+                                            <p:autoComplete value="#{departmentController.institution}" 
+                                                            completeMethod="#{institutionController.completeOffcialInstitutions}"
+                                                            var="ins" converter="institutionConverter"
+                                                            itemLabel="#{ins.name}" itemValue="#{ins}" id="acins">
+                                                <f:ajax event="itemSelect" execute="acins" render="lstSelect" listener="#{departmentController.fillInsDepts}"></f:ajax>
+                                            </p:autoComplete>
+
+                                            <h:outputText id="lblSelect" value="Department" >
+                                            </h:outputText>
+                                            <p:selectOneListbox id="lstSelect"  value="#{departmentController.current}" style="min-width: 223px">
+                                                <f:selectItems  value="#{departmentController.insDepts}" var="myItem" itemValue="#{myItem}" itemLabel="#{myItem.name}" ></f:selectItems>
+                                                <f:ajax event="click" execute="lstSelect" render="acins" listener="#{departmentController.departmenListen(myItem)}"/>
+                                            </p:selectOneListbox>
+
+                                            <p:outputLabel value="Department Name"></p:outputLabel>
+                                            <p:inputText value="#{departmentController.depaertmentName}"></p:inputText>
+                                            <p:commandButton ajax="false" action="#{departmentController.addDepartmentForInstitution}" value="Add" styleClass="buttons"></p:commandButton>
+                                            <p:commandButton ajax="false" action="#{departmentController.delete()}" value="Delete" styleClass="buttons"></p:commandButton>
+                                        </h:panelGrid>
+                                    </p:panel>
+
+                                </h:panelGrid>
+
+
+                            </h:panelGrid>
+                        </div>
+
+                    </p:panel>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

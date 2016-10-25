@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>#{labels.topic}</title>
+        <h:outputStylesheet library="css" name="default.css" />
+        <h:outputStylesheet library="css" name="nbds.css" />
+    </h:head>
+
+    <h:body style="padding: 0px;top: 0px!important;left: 0px!important;bottom: 0px!important;right: 0px!important;" >
+        <p:growl id="growl" autoUpdate="true"/>
+        <p:ajaxStatus style="position: absolute; width:28px;height:28px;position:fixed;right: 60px;top: 25px">  
+            <f:facet name="start">  
+                <p:graphicImage library="image" name="loader.gif" />  
+            </f:facet>  
+            <f:facet name="complete">  
+                <h:outputText value="" />  
+            </f:facet>  
+        </p:ajaxStatus>  
+        <p:layout fullPage="true" style="border: 0px;margin: 0px auto;text-align: center;padding: 0px;left: 0px;right: 0px;top: 0px;" >
+            <p:layoutUnit position="north" 
+                          collapsible="false" 
+                          style="min-height:100px; max-height: 100px!important; height: 100px!important; left: 0px;right: 0px;top: 0px;border: 0px;margin: 0px auto;text-align: center;padding: 0px;" >
+                <h:graphicImage class="banner" library="image" name="logo1.jpg" width="100%" height="100%" style="margin: 0px auto;overflow: hidden; padding: 0px;"></h:graphicImage> 
+            </p:layoutUnit>
+            <p:layoutUnit position="south" >
+                <h:form>
+                    <h:panelGrid columns="3" >
+                        <h:outputLabel rendered="#{sessionController.logged}" value="&copy;&nbsp;Ministry of Health, Sri Lanka." ></h:outputLabel>
+                        <h:outputLabel rendered="#{sessionController.logged}" value="You are logged as #{sessionController.displayName}." ></h:outputLabel>
+                        <p:commandLink rendered="#{sessionController.logged}" action="#{sessionController.logout}" ajax="false">
+                            <h:graphicImage width="100px" height="25px" library="image" name="logout.png" />
+                        </p:commandLink>
+                    </h:panelGrid>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="center"
+                          style="left: 0px;right: 0px;top: 0px;border: 0px;margin: 0px auto;text-align: center;padding: 0px;" >
+
+                <h:panelGroup  rendered="#{sessionController.logged}" style="margin: 0px; padding: 0px; border: 0px;" >
+
+                    <h:form >  
+                        <p:menubar styleClass="nonPrintBlock" style="text-align: left; border-bottom: 1px solid #dddddd; border-top: 1px solid #dddddd; border-radius: 0px; margin: 0px;">
+                            <p:menuitem  ajax="false"  action="index" value="Home" ></p:menuitem>
+                            <p:submenu label="Cases"  rendered="#{sessionController.sysAdmin or sessionController.superUser}">
+                                <p:menuitem ajax="false" action="#{notificationFormController.addNewHospitalNotificationForm()}" value="Nortify" ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{notificationFormController.listUnregForms()}" value="Register Notifications" ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{notificationFormController.listRegForms()}" value="List All Registered Notifications" ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{notificationFormController.listAll}" value="List All Notification Forms"></p:menuitem>
+                                <p:menuitem ajax="false" action="#{abstractionFormController.listAll()}" value="List All Abstraction Forms"></p:menuitem>
+
+                                <p:menuitem ajax="false" action="#{abstractionFormController.addNewAbstractionForm()}"  value="Case Ascertainment"  ></p:menuitem>
+                            </p:submenu>
+                            <p:submenu label="Cases" rendered="#{sessionController.insAdmin}">
+                                <p:menuitem ajax="false" action="#{notificationFormController.addNewHospitalNotificationForm()}" value="Hospital Birth Defect Notification" ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{abstractionFormController.addNewAbstractionForm()}"  value="Case Ascertainment"  ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{notificationFormController.listAll}" value="List All Notification Forms"></p:menuitem>
+                                <p:menuitem ajax="false" action="#{abstractionFormController.listAll()}" value="List All Abstraction Forms"></p:menuitem>
+                                <p:menuitem ajax="false" action="#{notificationFormController.listRegForms()}" value="List All Registered Notifications" ></p:menuitem>
+                            </p:submenu>
+                            <p:submenu label="Reports" rendered="#{sessionController.sysAdmin or sessionController.superUser}">
+
+                                <p:menuitem ajax="false" action="registry_institution" value="Institutional Birth Defects Registry" ></p:menuitem>
+                                <p:menuitem ajax="false" action="registry_all" value="All Notifications" ></p:menuitem>
+                                <p:menuitem ajax="false" action="registry_district" value="District Birth Defects Registry" ></p:menuitem>
+                                <p:menuitem ajax="false" action="registry_province"  value="Provincial Birth Defects Registry"  ></p:menuitem>
+                                <p:menuitem ajax="false" action="registry_province_by_patients"  value="Provincial Birth Defects Registry By Patients"  ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{abstractionFormController.listInstitutional()}" value="Institutional Case Ascertainment Forms" ></p:menuitem>
+                                <p:menuitem ajax="false" action="#{abstractionFormController.listDistrict()}" value="District Case Ascertainment Forms" ></p:menuitem>
+
+                            </p:submenu>
+                            <p:submenu label="Administration"  rendered="#{sessionController.sysAdmin or sessionController.superUser}">
+                                <p:submenu label="Institutions" >
+                                    <p:menuitem  ajax="false"  action="institution_type" value="Institution Type"   ></p:menuitem>
+                                    <p:menuitem  ajax="false"  action="institutions" value="Institutions"  ></p:menuitem>
+                                </p:submenu>
+                                <p:menuitem  ajax="false"  action="area" value="Area"  ></p:menuitem>
+                                <p:menuitem  ajax="false"  action="/category/List" value="Categories"  ></p:menuitem>
+                                <p:menuitem value="Category" outcome="/category/List.xhtml" />
+                                <p:menuitem  ajax="false"  action="department" value="#{labels.department}"  ></p:menuitem>
+                                <p:menuitem  ajax="false"  action="#{webUserController.newUserAdd}" value="Add Users"  ></p:menuitem>
+                                <p:menuitem  ajax="false"  action="manage_users" value="Manage Users"  ></p:menuitem>
+                            </p:submenu>
+                            <p:submenu label="Administration"  rendered="#{sessionController.insAdmin}">
+                                <p:menuitem  ajax="false"  action="#{sessionController.prepareAddNewUser()}" value="Add Users"  ></p:menuitem>
+                                <p:menuitem  ajax="false"  action="manage_users" value="Manage Users"  ></p:menuitem>
+                                <p:menuitem  ajax="false"  action="department" value="Department"  ></p:menuitem>
+                                <p:menuitem  ajax="false"  action="area" value="Area"  ></p:menuitem>
+                            </p:submenu>
+                            <p:submenu label="Options">
+                                <p:menuitem  ajax="false"  action="change_password" value="Change Password" ></p:menuitem>
+                            </p:submenu>
+                        </p:menubar>
+                    </h:form>
+
+                </h:panelGroup>
+
+
+
+                <h:panelGroup rendered="#{sessionController.logged}">
+                    <ui:insert name="content">
+                    </ui:insert>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{!sessionController.logged}" >
+                    <ui:insert name="login"   >
+                        <h:form>
+                            <p:panel style="border: #ffffff">
+                                <f:facet name="header" >
+                                    <p:panel style="width: 40%; height: 10%; float: right">
+                                        <p:panelGrid columns="3">
+                                            <p:outputLabel value="Username" ></p:outputLabel>
+                                            <p:outputLabel value="Password"></p:outputLabel>
+                                            <p:outputLabel></p:outputLabel>
+                                            <p:inputText id="un" value="#{sessionController.userName}" autocomplete="off" required="true" requiredMessage="Please enter the user name"><p:watermark value="Username" for="un"></p:watermark></p:inputText>
+                                            <p:password id="pw" value="#{sessionController.passord}"  autocomplete="off" required="true" requiredMessage="Please enter the password"><p:watermark value="Password" for="pw"></p:watermark></p:password>
+                                            <p:commandLink action="#{sessionController.loginAction}" ajax="false" style="float: right">
+                                                <h:graphicImage width="100px" height="25px" library="image" name="login.png" />
+                                            </p:commandLink>
+                                        </p:panelGrid>
+                                    </p:panel>
+
+                                </f:facet>
+                            </p:panel>
+
+                            <!--                            <div align="center" style="position: absolute; top: 58%; right: 2.5%">
+                                                            <p:panel style="width: 100%; height: 100%;">
+                            
+                                                                
+                                                            </p:panel>
+                                                        </div>-->
+                        </h:form>
+                    </ui:insert>
+                </h:panelGroup>
+
+            </p:layoutUnit>
+        </p:layout>
+
+
+    </h:body>
+
+</html>

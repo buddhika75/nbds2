@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./resources/template/template_1.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <!--  testing  -->
+
+    <ui:define name="content">
+        <p:growl autoUpdate="true" />
+        <h:outputStylesheet library="css" name="pdhscss1.css"   />
+        <p:panel rendered="#{sessionController.sysAdmin or sessionController.insAdmin}" style="border: #ffffff">
+            <f:facet name="header" >
+                <h:outputLabel value="Manage Users" ></h:outputLabel>
+            </f:facet>
+            <h:form >
+                <div align="center">
+                    <h:panelGrid columns="1">
+                        <h:outputLabel class="pdPageTitle" value="Manage User Accounts" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" >
+                        <p:panel style="height: 250px">
+                            <h:panelGrid id="gpSelect" columns="1" >
+                                <h:outputLabel value="Users"  />
+                                <p:selectOneListbox   value="#{userApproveController.selectedUser}">
+                                    <f:selectItems value="#{userApproveController.users}" var="user" itemValue="#{user}" itemLabel="#{user.webUserPerson.name}" />
+                                    <f:ajax event="change" render="gpDetail" execute="gpSelect"/>
+                                </p:selectOneListbox>
+                            </h:panelGrid>
+                        </p:panel>
+
+                        <p:panel style="height: 250px">
+                            <h:panelGroup id="gpDetail" >
+                                <h:panelGrid columns="2" >
+                                    <h:outputLabel value="Role" />
+                                    <p:selectOneListbox id="cmnSysAdminList" rendered="#{sessionController.sysAdmin}"  value="#{userApproveController.role}" >
+                                        <f:selectItems value="#{webUserRoleController.items}" var="adminRole" itemLabel="#{adminRole.name}" itemValue="#{adminRole}"  />
+                                    </p:selectOneListbox>
+
+                                    <p:selectOneListbox rendered="#{sessionController.insAdmin}"  id="cmnInsAdminList" value="#{userApproveController.role}" >
+                                        <f:selectItems value="#{webUserRoleController.lstInsAdminRoles}" var="insRole" itemLabel="#{insRole.name}" itemValue="#{insRole}" />
+                                    </p:selectOneListbox>
+
+                                    <h:outputLabel value="Previleges Restricted to" />
+                                    <h:outputLabel rendered="#{sessionController.loggedUser.restrictedInstitution!=null}"  value="#{sessionController.loggedUser.restrictedInstitution.name}" />
+
+                                    <p:autoComplete    forceSelection="true"  id="cmbIns" rendered="#{sessionController.loggedUser.restrictedInstitution==null}" value="#{userApproveController.selectedUser.restrictedInstitution}" 
+                                                       completeMethod="#{institutionController.completeOffcialInstitutions}"
+                                                       var="ri" itemValue="#{ri}" itemLabel="#{ri.name}" 
+                                                       >
+
+                                    </p:autoComplete>
+
+                                    <p:commandButton ajax="false" rendered="#{sessionController.sysAdmin}" value="Remove Institution Restriction" action="#{userApproveController.removeInsRes}" />
+                                    <p:commandButton ajax="false" value="Save" action="#{userApproveController.saveUser()}"></p:commandButton>
+                                </h:panelGrid>
+                            </h:panelGroup>
+                        </p:panel>
+
+
+                    </h:panelGrid>
+                </div>
+            </h:form>
+        </p:panel>
+        <p:panel header="You are not authrerized to view this page" rendered="#{!sessionController.sysAdmin and !sessionController.insAdmin}" >
+        </p:panel>
+    </ui:define>
+</ui:composition>
